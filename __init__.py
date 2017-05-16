@@ -92,3 +92,17 @@ class Command:
         else:
             msg_status('Not ok name: '+name)
 
+
+
+    def find_names(self):
+        lines = ed.get_text_all().splitlines()
+        items = do_find_names(lines)
+
+        print(items)
+        names = [i['name'] for i in items]
+        names = sorted(list(set(names)))
+
+        res = dlg_menu(MENU_LIST, '\n'.join(names))
+        if res is None: return
+        self._find_name(names[res])
+
