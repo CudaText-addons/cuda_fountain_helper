@@ -98,7 +98,6 @@ class Command:
         lines = ed.get_text_all().splitlines()
         items = do_find_names(lines)
 
-        print(items)
         names = [i['name'] for i in items]
         names = sorted(list(set(names)))
 
