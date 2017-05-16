@@ -23,17 +23,23 @@ def get_name_from(s):
     return (ok, s.strip())
 
 
-def find_data(lines):
-    """
-    Find character names in fountain text.
-    Also strip brackets from end of name.
-    @str is always a name.
-    """
+def find_scenes(lines):
+    res = []
+    for (i, s) in enumerate(lines):
+        if not s: continue
+        for prefix in ['.', 'EXT ', 'EXT.', 'INT ', 'INT.', 'INT/', 'EST ', 'EST.', 'ESTABLISHING', 'I/E', 'I./E.']:
+            if s.upper().startswith(prefix) and not s.startswith('..'):
+                res.append({'i': i, 's': s})
+    return res
+
+
+def find_names(lines):
     res = []
     for (i, s) in enumerate(lines):
         if not s: continue
         if i==0 or i==len(lines)-1: continue
 
+        #name is after empty line, next line is not empty
         ok = lines[i-1]=='' and lines[i+1]!=''
         if not ok: continue
 
@@ -65,7 +71,7 @@ class Command:
 
     def _find_name(self, name_init):
         lines = ed.get_text_all().splitlines()
-        items = find_data(lines)
+        items = find_names(lines)
 
         while True:
             name = dlg_input('Character name (case ignored):', name_init)
@@ -106,7 +112,7 @@ class Command:
 
     def _find_all_names(self):
         lines = ed.get_text_all().splitlines()
-        items = find_data(lines)
+        items = find_names(lines)
 
         names = [i['name'] for i in items]
         return sorted(list(set(names)))
@@ -114,13 +120,13 @@ class Command:
 
     def _extract_talks(self, name):
         lines = ed.get_text_all().splitlines()
-        items = find_data(lines)
+        items = find_names(lines)
 
         items = [i['text'] for i in items if i['name'].upper()==name.upper()]
         return items
 
 
-    def find_talks(self):
+    def extract_talks(self):
         names = self._find_all_names()
         res = dlg_menu(MENU_LIST, '\n'.join(names))
         if res is None: return
@@ -133,3 +139,16 @@ class Command:
 
         text = '\n\n'.join(items)+'\n'
         ed.set_text_all(text)
+
+
+    def find_scene(self):
+        lines = ed.get_text_all().splitlines()
+        items = find_scenes(lines)
+
+        items_m = [i['s'] for i in items]
+        res = dlg_menu(MENU_LIST, '\n'.join(items_m))
+        if res is None: return
+
+        y = items[res]['i']
+        ed.set_caret(0, y, -1, -1)
+
