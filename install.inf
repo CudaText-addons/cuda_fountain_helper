@@ -1,9 +1,9 @@
 [info]
 title=Fountain Helper
-desc=Helper for Fountain lexer: 1) On Shift+Enter it converts line to upper-case and does new-line, 2) Gives command to find all occurences of some character name.
+desc=Helper for Fountain lexer: 1) On Shift+Enter it converts line to upper-case and makes new-line, 2) Command to find all occurences of character talks, 3) Command to find all scenes, 4) Command to extract all talks of some character.
 type=cudatext-plugin
 subdir=cuda_fountain_helper
-homepage=
+homepage=https://github.com/CudaText-addons/cuda_fountain_helper
 
 [item1]
 section=events
