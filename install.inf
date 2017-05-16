@@ -12,12 +12,14 @@ lexers=Fountain
 
 [item2]
 section=commands
-caption=Fountain Helper\Find occurences of name
+caption=Fountain Helper\Find talk of name
 method=find_name
 lexers=Fountain
 
 [item3]
 section=commands
-caption=Fountain Helper\FF
-method=ff
+caption=Fountain Helper\Find talk of name under caret
+method=find_name_caret
+lexers=Fountain
+
 

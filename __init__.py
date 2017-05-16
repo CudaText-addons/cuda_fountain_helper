@@ -2,6 +2,24 @@ from cudatext import *
 import cudatext_cmd as cmds
 
 
+def get_name_from(s):
+    """
+    Extraxt name from line, strip () and @
+    """
+    n = s.find('(')
+    if n>=0:
+        s = s[:n].strip()
+
+    ok = False
+    if s.startswith('@'):
+        s = s[1:]
+        ok = True
+    elif s.isupper():
+        ok = True
+
+    return (ok, s)
+
+
 def do_find_names(lines):
     """
     Find character names in fountain text.
@@ -13,24 +31,17 @@ def do_find_names(lines):
         if not s: continue
         if i==0 or i==len(lines)-1: continue
 
-        n = s.find('(')
-        if n>=0:
-            s = s[:n].strip()
+        ok = lines[i-1]=='' and lines[i+1]!=''
+        if not ok: continue
 
-        ok = False
-        if s.startswith('@'):
-            s = s[1:]
-            ok = True
-        elif s.isupper() and lines[i-1]=='' and lines[i+1]!='':
-            ok = True
-
+        ok, s = get_name_from(s)
         if ok:
             res.append({'name': s, 'i': i, 'nextline': lines[i+1] })
-
     return res
 
 
 class Command:
+    last_name = ''
 
     def on_key(self, ed_self, key, state):
         #work on Shift+Enter
@@ -46,15 +57,16 @@ class Command:
             return False #block
 
 
-    def find_name(self):
+    def _find_name(self, name_init):
         lines = ed.get_text_all().splitlines()
         items = do_find_names(lines)
 
         while True:
-            name = dlg_input('Character name (case ignored):', '')
+            name = dlg_input('Character name (case ignored):', name_init)
             if not name: return
             items = [i for i in items if i['name'].upper()==name.upper()]
             if items:
+                self.last_name = name
                 break
             else:
                 msg_box('Name "%s" not found, try another name'%name, MB_OK+MB_ICONWARNING)
@@ -67,6 +79,16 @@ class Command:
         ed.set_caret(0, y, -1, -1)
 
 
-    def ff(self):
-        pass
+    def find_name(self):
+        self._find_name(self.last_name)
+
+    def find_name_caret(self):
+        carets = ed.get_carets()
+        if len(carets)>1: return
+        y = carets[0][1]
+        ok, name = get_name_from(ed.get_text_line(y))
+        if ok:
+            self._find_name(name)
+        else:
+            msg_status('Not ok name: '+name)
 
