@@ -4,11 +4,14 @@ import cudatext_cmd as cmds
 
 def get_name_from(s):
     """
-    Extraxt name from line, strip () and @
+    Extraxt name from line, strip () and @ and ^
     """
     n = s.find('(')
     if n>=0:
-        s = s[:n].strip()
+        s = s[:n]
+
+    if s.endswith('^'):
+        s = s[:-1]
 
     ok = False
     if s.startswith('@'):
@@ -17,7 +20,7 @@ def get_name_from(s):
     elif s.isupper():
         ok = True
 
-    return (ok, s)
+    return (ok, s.strip())
 
 
 def do_find_names(lines):
