@@ -1,6 +1,6 @@
 [info]
 title=Fountain Helper
-desc=Helper for Fountain lexer: 1) On Shift+Enter it converts line to upper-case and does new-line, 2) Gives command to find all occurences of some character name.
+desc=For Fountain lexer: 1) On Shift+Enter it converts line to upper-case and does new-line, 2) Command to find all occurences of some name talks, 3) Command to find all names, 4) Command to extract talks of some name.
 type=cudatext-plugin
 subdir=cuda_fountain_helper
 homepage=
@@ -22,10 +22,9 @@ caption=Fountain Helper\Find talk of name under caret
 method=find_name_caret
 lexers=Fountain
 
-[item8]
+[item6]
 section=commands
-caption=Fountain Helper\Find all names
-method=find_names
+caption=Fountain Helper\Extract talks of name
+method=find_talks
 lexers=Fountain
-
 

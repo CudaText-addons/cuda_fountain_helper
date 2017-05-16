@@ -23,7 +23,7 @@ def get_name_from(s):
     return (ok, s.strip())
 
 
-def do_find_names(lines):
+def find_data(lines):
     """
     Find character names in fountain text.
     Also strip brackets from end of name.
@@ -39,7 +39,10 @@ def do_find_names(lines):
 
         ok, s = get_name_from(s)
         if ok:
-            res.append({'name': s, 'i': i, 'nextline': lines[i+1] })
+            text = lines[i+1]
+            if text.startswith('(') and i+2<len(lines):
+                text = lines[i+2]
+            res.append({'name': s, 'i': i, 'text': text})
     return res
 
 
@@ -62,7 +65,7 @@ class Command:
 
     def _find_name(self, name_init):
         lines = ed.get_text_all().splitlines()
-        items = do_find_names(lines)
+        items = find_data(lines)
 
         while True:
             name = dlg_input('Character name (case ignored):', name_init)
@@ -74,7 +77,7 @@ class Command:
             else:
                 msg_box('Name "%s" not found, try another name'%name, MB_OK+MB_ICONWARNING)
 
-        items_m = ['['+str(i['i']+1)+'] '+i['nextline'] for i in items]
+        items_m = ['['+str(i['i']+1)+'] '+i['text'] for i in items]
         res = dlg_menu(MENU_LIST, '\n'.join(items_m))
         if res is None: return
         #print(items[res])
@@ -83,7 +86,11 @@ class Command:
 
 
     def find_name(self):
-        self._find_name(self.last_name)
+        names = self._find_all_names()
+        res = dlg_menu(MENU_LIST, '\n'.join(names))
+        if res is None: return
+        self._find_name(names[res])
+
 
     def find_name_caret(self):
         carets = ed.get_carets()
@@ -97,14 +104,32 @@ class Command:
 
 
 
-    def find_names(self):
+    def _find_all_names(self):
         lines = ed.get_text_all().splitlines()
-        items = do_find_names(lines)
+        items = find_data(lines)
 
         names = [i['name'] for i in items]
-        names = sorted(list(set(names)))
+        return sorted(list(set(names)))
 
+
+    def _extract_talks(self, name):
+        lines = ed.get_text_all().splitlines()
+        items = find_data(lines)
+
+        items = [i['text'] for i in items if i['name'].upper()==name.upper()]
+        return items
+
+
+    def find_talks(self):
+        names = self._find_all_names()
         res = dlg_menu(MENU_LIST, '\n'.join(names))
         if res is None: return
-        self._find_name(names[res])
 
+        name = names[res]
+        items = self._extract_talks(name)
+
+        file_open('')
+        ed.set_prop(PROP_TAB_TITLE, 'from '+name)
+
+        text = '\n\n'.join(items)+'\n'
+        ed.set_text_all(text)
