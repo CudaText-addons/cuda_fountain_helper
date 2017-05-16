@@ -23,13 +23,23 @@ def get_name_from(s):
     return (ok, s.strip())
 
 
+def is_scene(s):
+    if not s:
+        return False
+    if s.startswith('.') and len(s)>1 and s[1].isalnum():
+        return True
+    s_ = s.upper()
+    for prefix in ['EXT ', 'EXT.', 'INT ', 'INT.', 'INT/', 'EST ', 'EST.', 'ESTABLISHING', 'I/E', 'I./E.']:
+        if s_.startswith(prefix):
+            return True
+    return False
+
+
 def find_scenes(lines):
     res = []
     for (i, s) in enumerate(lines):
-        if not s: continue
-        for prefix in ['.', 'EXT ', 'EXT.', 'INT ', 'INT.', 'INT/', 'EST ', 'EST.', 'ESTABLISHING', 'I/E', 'I./E.']:
-            if s.upper().startswith(prefix) and not s.startswith('..'):
-                res.append({'i': i, 's': s})
+        if is_scene(s):
+            res.append({'i': i, 's': s})
     return res
 
 
@@ -152,3 +162,30 @@ class Command:
         y = items[res]['i']
         ed.set_caret(0, y, -1, -1)
 
+
+    def on_complete(self, ed_self):
+        carets = ed.get_carets()
+        if len(carets)>1: return
+
+        x, y, x1, y1 = carets[0]
+        s = ed.get_text_line(y)
+        len_rt = len(s)-x
+        s = s[:x]
+
+        ok, s = get_name_from(s)
+        if not ok:
+            print('Not a character: '+s)
+            return
+
+        names = self._find_all_names()
+        #print('names', names)
+
+        res = []
+        for name in names:
+            if name.startswith(s) and name!=s:
+                res.append(name)
+        #print('res', res)
+
+        text = '\n'.join(['name|%s|'%name for name in res])
+        ed.complete(text, len(s), len_rt, 0, False)
+        return True

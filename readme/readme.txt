@@ -1,7 +1,8 @@
 plugin for CudaText.
 it gives features for Fountain lexer:
 
-- event on pressing Shift+Enter: it converts cur line to upper-case and inserts a newline.
+- event on pressing Shift+Enter: it converts cur line to upper-case and makes a new-line.
+- auto-completion list of names, when calling completions (Ctrl+Space) after partial character name.
 
 and commands in "Plugins - Fountain Helper":
 
