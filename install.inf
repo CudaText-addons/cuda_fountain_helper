@@ -1,0 +1,23 @@
+[info]
+title=Fountain Helper
+desc=Helper for Fountain lexer: 1) On Shift+Enter it converts line to upper-case and does new-line, 2) Gives command to find all occurences of some character name.
+type=cudatext-plugin
+subdir=cuda_fountain_helper
+homepage=
+
+[item1]
+section=events
+events=on_key
+lexers=Fountain
+
+[item2]
+section=commands
+caption=Fountain Helper\Find occurences of name
+method=find_name
+lexers=Fountain
+
+[item3]
+section=commands
+caption=Fountain Helper\FF
+method=ff
+
