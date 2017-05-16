@@ -22,4 +22,10 @@ caption=Fountain Helper\Find talk of name under caret
 method=find_name_caret
 lexers=Fountain
 
+[item8]
+section=commands
+caption=Fountain Helper\Find all names
+method=find_names
+lexers=Fountain
+
 
