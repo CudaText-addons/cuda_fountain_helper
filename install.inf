@@ -30,7 +30,7 @@ lexers=Fountain
 
 [item10]
 section=commands
-caption=Fountain Helper\Extract talks of character...
+caption=Fountain Helper\Extract character dialogue...
 method=extract_talks
 lexers=Fountain
 

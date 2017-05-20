@@ -1,4 +1,7 @@
 
+2017.05.20
++ command "Extract" adds title to 1st line of result file
+
 2017.05.17
 + refactoring
 + more status messages

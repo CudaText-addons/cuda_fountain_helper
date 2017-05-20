@@ -1,3 +1,4 @@
+import os
 from cudatext import *
 import cudatext_cmd as cmds
 from .fo_proc import *
@@ -97,10 +98,14 @@ class Command:
         name = names[res]
         items = self._extract_talks(name)
 
+        text_filename = os.path.basename(ed.get_filename())
+        text_caption = 'This file contains all dialogue spoken by "%s" extracted from "%s".'\
+            % (name, text_filename)
+
         file_open('')
         ed.set_prop(PROP_TAB_TITLE, 'from '+name)
 
-        text = '\n\n'.join(items)+'\n'
+        text = '\n\n'.join([text_caption]+items)+'\n'
         ed.set_text_all(text)
 
 
