@@ -1,4 +1,7 @@
 
+2017.06.05
++ command "Extract" also makes side-panel "Dialogs" and fills it with found talks. Click on these Dialog-lines puts caret to clicked dialog.
+
 2017.05.20
 + command "Extract" adds title to 1st line of result file
 

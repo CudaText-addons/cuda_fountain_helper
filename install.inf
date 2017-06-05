@@ -1,6 +1,6 @@
 [info]
 title=Fountain Helper
-desc=Helper for Fountain lexer: 1) On Shift+Enter it converts line to upper-case and makes new-line, 2) Command to find all occurences of character talks, 3) Command to find all scenes, 4) Command to extract all talks of some character, 5) On Ctrl+Space after partial character name it gives auto-completion list with names.
+desc=Helper for Fountain lexer: 1) On Shift+Enter it converts line to upper-case and makes new-line, 2) Command to list dialogs of some character, 3) Command to list all scenes, 4) Command to extract all dialogs of some character, 5) On Ctrl+Space after partial character name it gives auto-completion list with names.
 type=cudatext-plugin
 subdir=cuda_fountain_helper
 homepage=https://github.com/CudaText-addons/cuda_fountain_helper
@@ -11,12 +11,16 @@ events=on_key,on_complete
 lexers=Fountain
 
 [item2]
+section=events
+events=on_panel
+
+[item3]
 section=commands
 caption=Fountain Helper\Character list...
 method=find_name
 lexers=Fountain
 
-[item3]
+[item4]
 section=commands
 caption=Fountain Helper\Character under caret...
 method=find_name_caret

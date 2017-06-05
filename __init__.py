@@ -4,12 +4,16 @@ import cudatext_cmd as cmds
 from .fo_proc import *
 
 
+SIDE_TITLE = 'Dialogs'
+
 def msg(s):
     msg_status('[Fountain] '+s)
 
 
 class Command:
     last_name = ''
+    id_list = None
+    filename = ''
 
     def on_key(self, ed_self, key, state):
         #work on Shift+Enter
@@ -69,8 +73,8 @@ class Command:
             msg('Not ok name: '+name)
 
 
-
     def _find_all_names(self):
+
         lines = ed.get_text_all().splitlines()
         items = find_names(lines)
 
@@ -78,15 +82,33 @@ class Command:
         return sorted(list(set(names)))
 
 
+    def _fill_side_panel(self, extract_items, name):
+
+        app_proc(PROC_SIDEPANEL_ADD, SIDE_TITLE+',-1,listbox,output.png')
+        app_proc(PROC_SIDEPANEL_ACTIVATE, SIDE_TITLE)
+        self.id_list = app_proc(PROC_SIDEPANEL_GET_CONTROL, SIDE_TITLE)
+
+        listbox_proc(self.id_list, LISTBOX_DELETE_ALL)
+        for i in extract_items:
+            if i['name'].upper()==name.upper():
+                text = '%d: ' % (i['i']+1) + i['text']
+                listbox_proc(self.id_list, LISTBOX_ADD, text=text, tag=i['i'], index=-1)
+
+
     def _extract_talks(self, name):
+
         lines = ed.get_text_all().splitlines()
         items = find_names(lines)
+
+        self.filename = ed.get_filename()
+        self._fill_side_panel(items, name)
 
         items = [i['text'] for i in items if i['name'].upper()==name.upper()]
         return items
 
 
     def extract_talks(self):
+
         names = self._find_all_names()
         if not names:
             msg('No characters found')
@@ -110,6 +132,7 @@ class Command:
 
 
     def find_scene(self):
+
         lines = ed.get_text_all().splitlines()
         items = find_scenes(lines)
         if not items:
@@ -125,6 +148,7 @@ class Command:
 
 
     def on_complete(self, ed_self):
+
         carets = ed.get_carets()
         if len(carets)>1: return
 
@@ -150,3 +174,19 @@ class Command:
         text = '\n'.join(['name|%s|'%name for name in res])
         ed.complete(text, len(s), len_rt, 0, False)
         return True
+
+
+    def on_panel(self, ed_self, id_control, id_event):
+
+        if id_control != self.id_list: return
+
+        if id_event=='on_sel':
+            sel = listbox_proc(self.id_list, LISTBOX_GET_SEL)
+            if sel is None: return
+            item = listbox_proc(self.id_list, LISTBOX_GET_ITEM, index=sel)
+            if item is None: return
+            tag = item[1]
+
+            file_open(self.filename)
+            ed.set_caret(0, tag, -1, -1)
+            msg_status('Gone to line %d'%tag)
