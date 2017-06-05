@@ -186,9 +186,8 @@ class Command:
             if sel is None: return
             item = listbox_proc(self.id_list, LISTBOX_GET_ITEM, index=sel)
             if item is None: return
-            tag = item[1]
-            if tag<0: return
+            nline = item[1]
+            if nline<0: return
 
             file_open(self.filename)
-            ed.set_caret(0, tag, -1, -1)
-            msg_status('Gone to line %d'%tag)
+            ed.set_caret(0, nline, -1, -1)
