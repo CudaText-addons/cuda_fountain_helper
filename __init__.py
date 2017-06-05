@@ -82,29 +82,30 @@ class Command:
         return sorted(list(set(names)))
 
 
-    def _fill_side_panel(self, extract_items, name):
+    def fill_side_panel(self, extract_items, name):
 
         app_proc(PROC_SIDEPANEL_ADD, SIDE_TITLE+',-1,listbox,output.png')
         app_proc(PROC_SIDEPANEL_ACTIVATE, SIDE_TITLE)
         self.id_list = app_proc(PROC_SIDEPANEL_GET_CONTROL, SIDE_TITLE)
 
         listbox_proc(self.id_list, LISTBOX_DELETE_ALL)
+        listbox_proc(self.id_list, LISTBOX_ADD, index=-1, text='(from %s)'%name, tag=-1)
+
         for i in extract_items:
-            if i['name'].upper()==name.upper():
-                text = '%d: ' % (i['i']+1) + i['text']
-                listbox_proc(self.id_list, LISTBOX_ADD, text=text, tag=i['i'], index=-1)
+            text = '%d: ' % (i['i']+1) + i['text']
+            listbox_proc(self.id_list, LISTBOX_ADD, index=-1, text=text, tag=i['i'])
 
 
     def _extract_talks(self, name):
 
         lines = ed.get_text_all().splitlines()
         items = find_names(lines)
+        items = [i for i in items if i['name'].upper()==name.upper()]
 
         self.filename = ed.get_filename()
-        self._fill_side_panel(items, name)
+        self.fill_side_panel(items, name)
 
-        items = [i['text'] for i in items if i['name'].upper()==name.upper()]
-        return items
+        return [i['text'] for i in items]
 
 
     def extract_talks(self):
@@ -186,6 +187,7 @@ class Command:
             item = listbox_proc(self.id_list, LISTBOX_GET_ITEM, index=sel)
             if item is None: return
             tag = item[1]
+            if tag<0: return
 
             file_open(self.filename)
             ed.set_caret(0, tag, -1, -1)
