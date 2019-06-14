@@ -2,6 +2,7 @@ import os
 from cudatext import *
 import cudatext_cmd as cmds
 from .fo_proc import *
+from .preview import do_preview
 
 
 SIDE_TITLE = 'Dialogs'
@@ -207,3 +208,8 @@ class Command:
 
         file_open(self.filename)
         ed.set_caret(0, nline, -1, -1)
+
+
+    def web_preview(self):
+
+        do_preview()

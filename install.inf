@@ -38,3 +38,13 @@ caption=Fountain Helper\Extract character dialogue...
 method=extract_talks
 lexers=Fountain
 
+[item20]
+section=commands
+caption=Fountain Helper\-
+method=_
+
+[item21]
+section=commands
+caption=Fountain Helper\Preview in browser
+method=web_preview
+lexers=Fountain
