@@ -12,6 +12,7 @@ def msg(s):
 
 class Command:
     last_name = ''
+    id_dlg = None
     id_list = None
     filename = ''
 
@@ -82,11 +83,29 @@ class Command:
         return sorted(list(set(names)))
 
 
+    def init_dlg(self):
+
+        h = dlg_proc(0, DLG_CREATE)
+        self.id_dlg = h
+
+        n = dlg_proc(h, DLG_CTL_ADD, 'listbox_ex')
+        dlg_proc(h, DLG_CTL_PROP_SET, index=n, prop={
+            'name': 'list',
+            'align': ALIGN_CLIENT,
+            'act': True,
+            'on_change': self.callback_list_click,
+        })
+
+        self.id_list = dlg_proc(h, DLG_CTL_HANDLE, index=n)
+
+
     def fill_side_panel(self, extract_items, name):
 
-        app_proc(PROC_SIDEPANEL_ADD, SIDE_TITLE+',-1,listbox,output.png')
+        if not self.id_dlg:
+            self.init_dlg()
+
+        app_proc(PROC_SIDEPANEL_ADD_DIALOG, (SIDE_TITLE, self.id_dlg, 'output.png'))
         app_proc(PROC_SIDEPANEL_ACTIVATE, SIDE_TITLE)
-        self.id_list = app_proc(PROC_SIDEPANEL_GET_CONTROL, SIDE_TITLE)
 
         listbox_proc(self.id_list, LISTBOX_DELETE_ALL)
         listbox_proc(self.id_list, LISTBOX_ADD, index=-1, text='(from %s)'%name, tag=-1)
@@ -177,17 +196,14 @@ class Command:
         return True
 
 
-    def on_panel(self, ed_self, id_control, id_event):
+    def callback_list_click(self, id_dlg, id_ctl, data='', info=''):
 
-        if id_control != self.id_list: return
+        sel = listbox_proc(self.id_list, LISTBOX_GET_SEL)
+        if sel is None: return
+        item = listbox_proc(self.id_list, LISTBOX_GET_ITEM, index=sel)
+        if item is None: return
+        nline = item[1]
+        if nline<0: return
 
-        if id_event=='on_sel':
-            sel = listbox_proc(self.id_list, LISTBOX_GET_SEL)
-            if sel is None: return
-            item = listbox_proc(self.id_list, LISTBOX_GET_ITEM, index=sel)
-            if item is None: return
-            nline = item[1]
-            if nline<0: return
-
-            file_open(self.filename)
-            ed.set_caret(0, nline, -1, -1)
+        file_open(self.filename)
+        ed.set_caret(0, nline, -1, -1)

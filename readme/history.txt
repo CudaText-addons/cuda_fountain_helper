@@ -1,4 +1,7 @@
 
+2019.06.14
+- fixed to work in CudaText 1.8x
+
 2017.06.05
 + command "Extract" also makes side-panel "Dialogs" and fills it with found talks. Click on these Dialog-lines puts caret to clicked dialog.
 
