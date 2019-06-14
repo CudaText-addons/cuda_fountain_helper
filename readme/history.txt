@@ -1,6 +1,7 @@
 
 2019.06.14
-- fixed to work in CudaText 1.8x
+- fixed command "Extract character dialog" to work in CudaText 1.8x
++ added command "Preview in browser" - it requires Node.js installed
 
 2017.06.05
 + command "Extract" also makes side-panel "Dialogs" and fills it with found talks. Click on these Dialog-lines puts caret to clicked dialog.
@@ -13,4 +14,4 @@
 + more status messages
 
 2017.05.16
-init
+initial
