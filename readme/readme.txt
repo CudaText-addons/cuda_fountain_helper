@@ -21,6 +21,7 @@ it asks for a name, then finds all talks of that name. talks are collected in a 
 - "Preview in browser"
 it converts current document to HTML (in a temporary folder) and opens HTML file in browser.
 this command requires Node.js installed!
+it uses parser from: https://github.com/nathanhoad/fountain-js
 
 
 author: Alexey Torgashin (CudaText)
