@@ -46,7 +46,7 @@ class Command:
                 msg_box('Name "%s" not found, try another name'%name, MB_OK+MB_ICONWARNING)
 
         items_m = ['['+str(i['i']+1)+'] '+i['text'] for i in items]
-        res = dlg_menu(MENU_LIST, '\n'.join(items_m))
+        res = dlg_menu(DMENU_LIST, items_m, caption='Occurrences')
         if res is None: return
         #print(items[res])
         y = items[res]['i']
@@ -59,7 +59,7 @@ class Command:
             msg('No characters found')
             return
 
-        res = dlg_menu(MENU_LIST, '\n'.join(names))
+        res = dlg_menu(DMENU_LIST, names, caption='Characters')
         if res is None: return
         self._find_name(names[res])
 
@@ -135,7 +135,7 @@ class Command:
             msg('No characters found')
             return
 
-        res = dlg_menu(MENU_LIST, '\n'.join(names))
+        res = dlg_menu(DMENU_LIST, names, caption='Names')
         if res is None: return
 
         name = names[res]
@@ -161,7 +161,7 @@ class Command:
             return
 
         items_m = [i['s'] for i in items]
-        res = dlg_menu(MENU_LIST, '\n'.join(items_m))
+        res = dlg_menu(DMENU_LIST, items_m, caption='Scenes')
         if res is None: return
 
         y = items[res]['i']

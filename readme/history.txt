@@ -1,4 +1,7 @@
 
+2021.06.17
+- fix: avoid deprecated API
+
 2019.06.14
 - fixed command "Extract character dialog" to work in CudaText 1.8x
 + added command "Preview in browser" - it requires Node.js installed
