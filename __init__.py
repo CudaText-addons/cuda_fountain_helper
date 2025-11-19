@@ -201,9 +201,9 @@ class Command:
 
         sel = listbox_proc(self.id_list, LISTBOX_GET_SEL)
         if sel is None: return
-        item = listbox_proc(self.id_list, LISTBOX_GET_ITEM, index=sel)
+        item = listbox_proc(self.id_list, LISTBOX_GET_ITEM_PROP, index=sel)
         if item is None: return
-        nline = item[1]
+        nline = item['tag']
         if nline<0: return
 
         file_open(self.filename)
